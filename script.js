@@ -5,6 +5,8 @@ const readline = require('readline').createInterface({
 
 let agenda = [];
 
+
+
 const addConsulta = () => {
     readline.question("Enter your name: ", name => {
         readline.question("Enter the Doctor's name: ", nomeMed => {
@@ -25,20 +27,33 @@ const addConsulta = () => {
     });
 }
 
-const removeConsult = (index) => {
-    console.log("Suas consultas, qual removerá: ")
-    console.log(`${index + 1} Name: ${infos.name}, Médico: ${infos.nomeMed}, data consulta: ${infos.dates}, horario: ${infos.horario} \n`);
-    const indice = agenda.findIndex(infos => infos.name === index);
-    
-    if (indice !== -1) {
-                agenda.splice(indice, 1);
-                console.log("Consulta Removida ");
-            } else {
-                console.log("Consulta não localizada ");
-            }
+
+
+const removeConsult = () => {
+    if (agenda.length <= 0) {
+        console.log("Você não possui nenhuma consulta agendada: ");
+        menu();
+    }
+
+    console.log("Suas consultas agendadas: ");
+    agenda.forEach((consulta, index) => {
+        console.log(`${index + 1} - Paciente: ${consulta.name}, Médico: ${consulta.nomeMed}, Data: ${consulta.dates}, Horário: ${consulta.horario}`);
+    });
+
+    readline.question("Digite o número da consulta que deseja remover: ", (indexRemove) => {
+        const consultIndice = parseInt(indexRemove) - 1;
+
+        if (consultIndice >= 0 && consultIndice < agenda.length) {
+            agenda.splice(consultIndice, 1);
+            console.log('Consulta removida com sucesso!');
             menu();
-    };
-    
+        } else {
+            console.log('Índice de consulta inválido.');
+        }
+    });
+}
+
+
 
 const listConsultas = () => {
     if (agenda.length <= 0) {
@@ -103,8 +118,8 @@ const alterConsulta = () => {
                 case 4:
                     readline.question("Digite o novo horário: ", novoHorario => {
                         agenda[consultaIndice].horario = novoHorario;
-                        console.log("O horário foi atualizado!!! ")
-                        menu();
+                         console.log("O horário foi atualizado!!! ")
+                            menu();
                 });
                 break;
                 default:
